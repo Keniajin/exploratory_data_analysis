@@ -1,0 +1,17 @@
+{
+    "contents" : "#Description: Measurements of electric power consumption in one household with a one-minute sampling rate over a period of almost 4 years.\n#Different electrical quantities and some sub-metering values are available\n\n#load the dataset\n##library(sqldf)\n##DF4 <- read.csv.sql(fn, sql = 'select * from file where Date >= \"1985-01-01\"')\n\nfileUrl1 = \"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2Fhousehold_power_consumption.zip\"\nif (!file.exists(\"./data/household_power_consumption.zip\")) {\n  download.file(fileUrl1, destfile = \"./data/household_power_consumption.zip\")\n}\n#hhpc <- read.table(\"data/household_power_consumption.txt\",header=T,sep=\";\")\nhhpc <- read.table(unz(\"data/household_power_consumption.zip\", \"household_power_consumption.txt\"),header=T,sep=\";\")\n#convert the neccessary variables to as.Date\n#hhpc$Date2 <- strptime(hhpc$Date, \"%d/%m/%Y\")\nhhpc$Date2 <- as.Date(hhpc$Date,\"%d/%m/%Y\")\n\n\n#all mising values are recorded as ?\n#na.strings=c(\"?\")\n\n#subset a data We will only be using data from the dates 2007-02-01 and 2007-02-02.\n#subdata <- hhpc[(hhpc$Date2 %in% \"2007-02-01\" | hhpc$Date2 %in% \"2007-02-02\"  ),]\nsubdata <- subset(hhpc, Date2 == \"2007-02-01\" | Date2 == \"2007-02-02\")\n#convert the time variable to time format\nsubdata$Time2 <- strptime(subdata$Time,\"%H:%M:%S\")\n#combine date and time\nsubdata$DateTime <- paste(subdata$Date, subdata$Time)\nsubdata$DateTime <-  strptime(subdata$DateTime , \"%d/%m/%Y %H:%M:%S\")\n\n#plot1\nstr(subdata)\nsubdata$Global_active_power[subdata$Global_active_power==\"?\"] <- NA\nsubdata$Global_active_power <- as.numeric(as.character(subdata$Global_active_power))\nhist(subdata$Global_active_power , col=\"red\", main=\"Global Active Power\",xlab=\"Global Active Power (kilowatts)\")\ndev.copy(png, file = \"plot1.png\" ,width = 480, height = 480)  ## Copy my plot to a plot1.PNG file\ndev.off()\n",
+    "created" : 1402224708329.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3872005607",
+    "id" : "5FADE58E",
+    "lastKnownWriteTime" : 1402224735,
+    "path" : "E:/R_CLass/Data_Science_Spe/exploratory_data_analysis/codes_graphics/plot1.r",
+    "project_path" : "plot1.r",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
